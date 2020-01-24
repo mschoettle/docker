@@ -1,0 +1,21 @@
+version: "3.7"
+
+services:
+  gitea:
+    build: .
+    image: mschoettle/gitea
+    container_name: gitea
+    restart: always
+    volumes: 
+      - /mnt/mydisk/docker-volumes/gitea:/data
+      - /etc/localtime:/etc/localtime:ro
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.gitea.rule=Host(`git.mattsch.com`)"
+      - "traefik.http.routers.gitea.tls=true"
+      - "traefik.http.services.gitea.loadbalancer.server.port=3000"
+
+networks:
+  default:
+    external:
+      name: mynet

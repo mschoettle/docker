@@ -1,0 +1,42 @@
+version: "3.7"
+
+services:
+  redis:
+    image: redis:alpine
+    container_name: nextcloud-redis
+    restart: always
+
+  app:
+    image: nextcloud:fpm-alpine
+    container_name: nextcloud-app
+    restart: always
+    volumes: 
+      - /mnt/mydisk/docker-volumes/nextcloud:/var/www/html
+      - /etc/localtime:/etc/localtime:ro
+    environment:
+      - MYSQL_HOST=172.22.0.1
+      - REDIS_HOST=redis
+    env_file:
+      - db.env
+    depends_on:
+      - redis
+
+  nginx:
+    build: ./nginx
+    container_name: nextcloud-nginx
+    restart: always
+    volumes:
+      - /mnt/mydisk/docker-volumes/nextcloud:/var/www/html:ro
+      - /etc/localtime:/etc/localtime:ro
+    depends_on:
+      - app
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.nextcloud.rule=Host(`nextcloud.mattsch.com`)"
+      - "traefik.http.routers.nextcloud.tls=true"
+      - "traefik.http.services.nextcloud.loadbalancer.server.port=80"
+
+networks:
+  default:
+    external:
+      name: mynet

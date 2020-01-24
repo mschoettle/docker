@@ -1,0 +1,20 @@
+version: "3.7"
+
+services:
+  traefik:
+    image: traefik:2.1.2
+    container_name: traefik
+    restart: always
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes: 
+      - $PWD/traefik.yml:/etc/traefik/traefik.yml
+      - $PWD/config:/config
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /etc/localtime:/etc/localtime:ro
+
+networks:
+  default:
+    external:
+      name: mynet

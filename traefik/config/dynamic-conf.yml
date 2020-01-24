@@ -1,0 +1,51 @@
+http:
+  routers:
+    # fake router for wildcard certificate (causes error about service not defined)
+    wildcard-cert:
+      #rule: Host(`traefik.mattsch.com`)
+      #service: api@internal
+      #specifying a service without a rule causes another error
+      #service: noop
+      tls:
+        certResolver: letsencrypt
+        domains:
+          - main: "*.domain.tld"
+    # Redirect all HTTP to HTTPS
+    redirect:
+      rule: HostRegexp(`{host:.+}`)
+      entryPoints:
+        - http
+      service: noop
+      middlewares:
+        - redirect
+    pihole:
+      rule: Host(`dns.mattsch.com`)
+      service: pihole
+      tls: {}
+    router:
+      rule: Host(`router.mattsch.com`)
+      service: router
+      tls: {}
+  middlewares:
+    redirect:
+      redirectScheme:
+        scheme: https
+  services:
+    # Fake service to suppress missing service error (will never be called)
+    noop:
+      loadBalancer:
+        servers:
+          - url: "http://localhost"
+    pihole:
+      loadBalancer:
+        servers:
+          - url: "http://pi.hole:8080"
+    router:
+      loadBalancer:
+        servers:
+          - url: "http://192.168.1.1"
+
+tls:
+  options:
+    default:
+      minVersion: VersionTLS13

@@ -1,0 +1,36 @@
+global:
+  checkNewVersion: true
+  sendAnonymousUsage: false
+
+log:
+  level: INFO
+
+entryPoints:
+  http:
+    address: ":80"
+  https:
+    address: ":443"
+
+# Docker configuration backend
+providers:
+  docker:
+    exposedByDefault: false
+    #defaultRule: "Host(`{{ trimPrefix `/` .Name }}.mattsch.com`)"
+  file:
+    filename: "/config/dynamic-conf.yml"
+
+# API and dashboard configuration
+api:
+  insecure: false
+  dashboard: true
+
+certificatesResolvers:
+  letsencrypt:
+    acme:
+      dnsChallenge:
+        provider: manual
+        # delayBeforeCheck: 120
+      email: <insertemail>
+      storage: "/config/acme.json"
+      # Staging server
+      #caServer: "https://acme-staging-v02.api.letsencrypt.org/directory"
