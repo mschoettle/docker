@@ -14,6 +14,10 @@ The containers can either be started using the shell script or docker-compose. H
 
 I run a MariaDB on the RPI directly and created a custom bridge network in docker that is used by the DB and all services. Therefore, you see the network `mynet` in the start script and docker-compose.
 
+## Backups
+
+I run a backup script (`backup.sh` in the respective service folder) every night which backs up the data to a second external disk using [restic](https://restic.net/).
+
 ## More Information 
 
 For more information, such as how I set this all up in detail, check out my blog posts: https://mattsch.com/category/raspberry-pi/
