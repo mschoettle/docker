@@ -2,12 +2,12 @@ version: "3.7"
 
 services:
   redis:
-    image: redis:alpine
+    image: redis:5.0.7-alpine
     container_name: nextcloud-redis
     restart: always
 
   app:
-    image: nextcloud:fpm-alpine
+    image: nextcloud:17.0.5-fpm-alpine
     container_name: nextcloud-app
     restart: always
     volumes: 
