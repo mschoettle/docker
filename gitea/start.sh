@@ -1,6 +1,6 @@
 #!/bin/bash
 
-version="1.10.3"
+version="1.11.4"
 
 docker container stop gitea-$version
 docker container rm gitea-$version

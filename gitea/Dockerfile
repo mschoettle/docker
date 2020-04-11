@@ -1,8 +1,8 @@
-ARG ALPINE_VERSION=3.11.3
+ARG ALPINE_VERSION=3.11.5
 
 FROM alpine:$ALPINE_VERSION AS build-env
 
-ARG GITEA_VERSION=1.10.3
+ARG GITEA_VERSION=1.11.4
 
 # Build dependencies
 RUN apk --no-cache add curl wget

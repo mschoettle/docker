@@ -13,6 +13,8 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.gitea.rule=Host(`git.mattsch.com`)"
       - "traefik.http.routers.gitea.tls=true"
+      # If a service connecting to Gitea does not support TLS v1.3 yet
+      # - "traefik.http.routers.gitea.tls.options=mintls12@file"
       - "traefik.http.services.gitea.loadbalancer.server.port=3000"
 
 networks:
