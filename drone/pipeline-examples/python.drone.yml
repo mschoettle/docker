@@ -1,0 +1,32 @@
+kind: pipeline
+name: default
+
+platform:
+    os: linux
+    arch: arm
+
+steps:
+- name: setup
+  image: python:3.8.2-buster
+  commands:
+    - python -m venv --prompt 'scraper' .venv
+    - . .venv/bin/activate
+    - python -m pip install --upgrade pip
+    - CFLAGS="-O0" python -m pip install -r requirements.txt
+- name: lint
+  image: python:3.8.2-buster
+  commands:
+    - . .venv/bin/activate
+    - flake8
+    - mypy .
+- name: test
+  image: python:3.8.2-buster
+  commands:
+    - . .venv/bin/activate
+    - pytest
+- name: coverage
+  image: python:3.8.2-buster
+  commands:
+    - . .venv/bin/activate
+    - coverage run -m pytest
+    - coverage report

@@ -1,0 +1,53 @@
+version: "3.7"
+
+services:
+  server:
+    image: drone/drone:1.6.5
+    container_name: drone
+    restart: always
+    volumes:
+      - /mnt/mydisk/docker-volumes/drone:/data
+      - /etc/localtime:/etc/localtime:ro
+    environment:
+      - DRONE_GIT_ALWAYS_AUTH=false
+# for debugging purposes
+#      - DRONE_LOGS_TRACE=true
+#      - DRONE_LOGS_DEBUG=true
+#      - DRONE_LOGS_PRETTY=true
+    env_file:
+      - server.env
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.drone.rule=Host(`drone.mattsch.com`)"
+      - "traefik.http.routers.drone.tls=true"
+     # drone-runner-docker currently does not support TLS v1.3
+      - "traefik.http.routers.drone.tls.options=mintls12@file"
+      - "traefik.http.services.drone.loadbalancer.server.port=80"
+
+  runner:
+    image: drone/drone-runner-docker:1.2.1
+    container_name: drone-runner
+    restart: always
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /etc/localtime:/etc/localtime:ro
+    environment:
+      - DRONE_RUNNER_CAPACITY=2
+      - DRONE_RUNNER_NAME=rpi-runner
+# for debugging purposes
+#      - DRONE_TRACE=true
+#      - DRONE_DEBUG=true
+#      - DRONE_RPC_DUMP_HTTP=true
+#      - DRONE_RPC_DUMP_HTTP_BODY=true
+# not sure why this is needed
+#    ports:
+#      - 3000:3000
+    env_file:
+      - runner.env
+    depends_on:
+      - server
+
+networks:
+  default:
+    external:
+      name: mynet

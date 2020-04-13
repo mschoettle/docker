@@ -1,0 +1,23 @@
+kind: pipeline
+name: default
+
+platform:
+  os: linux
+  arch: arm
+
+environment:
+  GITEA_VERSION: '1.11.3'
+
+steps:
+- name: create_tag_file
+  image: alpine:3.11.3
+  commands:
+    - echo -n "$GITEA_VERSION,latest" > .tags
+- name: build
+  image: plugins/docker
+  settings:
+    repo: hub.mattsch.com/${DRONE_REPO_NAME##docker-}
+    build_args_from_env:
+      - GITEA_VERSION
+    when:
+      branch: master
