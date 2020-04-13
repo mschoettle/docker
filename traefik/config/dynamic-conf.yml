@@ -49,3 +49,5 @@ tls:
   options:
     default:
       minVersion: VersionTLS13
+    mintls12:
+      minVersion: VersionTLS12
