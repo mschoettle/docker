@@ -73,6 +73,7 @@ cd $BACKUP_DIRECTORY
 unzip $FILENAME > /dev/null
 rm $FILENAME
 unzip gitea-repo.zip > /dev/null
+rm gitea-repo.zip
 
 log "backing up locally using restic"
 
