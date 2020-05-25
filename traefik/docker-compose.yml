@@ -2,7 +2,7 @@ version: "3.7"
 
 services:
   traefik:
-    image: traefik:2.1.6
+    image: traefik:2.2.1
     container_name: traefik
     restart: always
     ports:

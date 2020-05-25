@@ -8,14 +8,23 @@ log:
 entryPoints:
   http:
     address: ":80"
+    http:
+      redirections:
+        entrypoint:
+          to: https
   https:
     address: ":443"
+    http:
+      tls:
+        certResolver: letsencrypt
+        domains:
+          -main: "*.domain.tld"
 
 # Docker configuration backend
 providers:
   docker:
     exposedByDefault: false
-    #defaultRule: "Host(`{{ trimPrefix `/` .Name }}.mattsch.com`)"
+    #defaultRule: "Host(`{{ trimPrefix `/` .Name }}.domain.tld`)"
   file:
     filename: "/config/dynamic-conf.yml"
 
